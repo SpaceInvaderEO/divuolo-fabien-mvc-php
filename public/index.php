@@ -10,7 +10,7 @@ use Buki\Router\Router;
 // Instanciation du routeur
 $router = new Router([
     'paths' => [
-        'controllers' => 'App\Controllers',
+        'controllers' => __DIR__ . '/../app/Controllers',
     ],
     'namespaces' => [
         'controllers' => 'App\Controllers',

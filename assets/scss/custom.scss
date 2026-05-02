@@ -6,5 +6,5 @@ $danger: #cd2c2e;
 $dark: #384050;
 $light: #f1f8fc;
 
-// Ajout pour surcharger Bootstrap (quand il sera importé)
-// @import "../../node_modules/bootstrap/scss/bootstrap";
+// Ajout pour surcharger Bootstrap
+@import "../../node_modules/bootstrap/scss/bootstrap";
