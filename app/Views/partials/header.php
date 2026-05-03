@@ -9,9 +9,9 @@
 
             <!-- Menu et boutons à droite -->
             <div class="text-end">
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (isset($_SESSION['user'])): ?>
                     
-                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+                    <?php if (isset($_SESSION['user']['is_admin']) && $_SESSION['user']['is_admin'] == 1): ?>
                         <!-- Menu Administrateur -->
                         <a href="/admin/users" class="btn btn-outline-light me-2">Utilisateurs</a>
                         <a href="/admin/agencies" class="btn btn-outline-light me-2">Agences</a>
@@ -19,7 +19,7 @@
                         <a href="/logout" class="btn btn-danger">Déconnexion</a>
                     <?php else: ?>
                         <!-- Menu Utilisateur Connecté -->
-                        <span class="me-3 fw-semibold">Bonjour, <?= htmlspecialchars($_SESSION['first_name'] . ' ' . $_SESSION['last_name']) ?></span>
+                        <span class="me-3 fw-semibold">Bonjour, <?= htmlspecialchars($_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name']) ?></span>
                         <a href="/ride/create" class="btn btn-success me-2"><i class="fa-solid fa-plus me-1"></i> Créer un trajet</a>
                         <a href="/logout" class="btn btn-danger">Déconnexion</a>
                     <?php endif; ?>
