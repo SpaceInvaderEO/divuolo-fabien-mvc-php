@@ -25,16 +25,7 @@ $router = new Router([
 ]);
 
 // Route d'accueil
-$router->get('/', function () {
-    echo "<h1>Bienvenue sur l'application de covoiturage !</h1>";
-    echo "<p>Le routeur est correctement installé et configuré.</p>";
-    if (isset($_SESSION['user'])) {
-        echo "<p>Connecté en tant que: " . htmlspecialchars($_SESSION['user']['first_name']) . "</p>";
-        echo "<a href='/logout'>Se déconnecter</a>";
-    } else {
-        echo "<a href='/login'>Se connecter</a>";
-    }
-});
+$router->get('/', 'HomeController@index');
 
 // Routes d'authentification
 $router->get('/login', 'AuthController@login');
