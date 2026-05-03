@@ -6,6 +6,11 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Buki\Router\Router;
+use Dotenv\Dotenv;
+
+// Chargement des variables d'environnement
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 // Instanciation du routeur
 $router = new Router([

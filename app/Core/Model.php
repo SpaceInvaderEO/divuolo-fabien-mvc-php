@@ -15,12 +15,12 @@ abstract class Model
 
     public function __construct()
     {
-        // Connexion à la base de données (idéalement via variables d'environnement plus tard)
-        $host = '127.0.0.1';
-        $db   = 'covoiturage_db';
-        $user = 'root';
-        $pass = ''; // Modifiez avec votre mot de passe si nécessaire
-        $charset = 'utf8mb4';
+        // Connexion à la base de données via variables d'environnement
+        $host = $_ENV['DB_HOST'] ?? '127.0.0.1';
+        $db   = $_ENV['DB_NAME'] ?? 'covoiturage_db';
+        $user = $_ENV['DB_USER'] ?? 'root';
+        $pass = $_ENV['DB_PASS'] ?? '';
+        $charset = $_ENV['DB_CHARSET'] ?? 'utf8mb4';
 
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
         $options = [
