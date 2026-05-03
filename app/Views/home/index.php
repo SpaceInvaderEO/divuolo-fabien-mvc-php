@@ -43,9 +43,53 @@
                     </div>
                     <div class="card-footer bg-white border-0 pt-0 pb-3">
                         <?php if (isset($_SESSION['user'])): ?>
-                            <button type="button" class="btn btn-outline-primary w-100 fw-bold">
-                                <i class="fa-solid fa-eye me-1"></i> Voir les détails
-                            </button>
+                            <div class="d-flex gap-2 mb-2">
+                                <button type="button" class="btn btn-outline-primary flex-grow-1 fw-bold" data-bs-toggle="modal" data-bs-target="#rideModal<?= $ride['id_ride'] ?>">
+                                    <i class="fa-solid fa-eye me-1"></i> Voir les détails
+                                </button>
+                                
+                                <?php if ($_SESSION['user']['id_user'] == $ride['id_user']): ?>
+                                    <a href="/ride/edit/<?= $ride['id_ride'] ?>" class="btn btn-outline-secondary" title="Modifier">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <a href="/ride/delete/<?= $ride['id_ride'] ?>" class="btn btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce trajet ? Cette action est irréversible.');">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Modal Détails Trajet -->
+                            <div class="modal fade" id="rideModal<?= $ride['id_ride'] ?>" tabindex="-1" aria-labelledby="rideModalLabel<?= $ride['id_ride'] ?>" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary text-white">
+                                            <h5 class="modal-title" id="rideModalLabel<?= $ride['id_ride'] ?>"><i class="fa-solid fa-car me-2"></i> Détails du trajet</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Informations sur le conducteur</h6>
+                                            <ul class="list-unstyled mb-4">
+                                                <li class="mb-2"><i class="fa-solid fa-user text-muted me-2"></i> <strong>Conducteur :</strong> <?= htmlspecialchars($ride['first_name'] . ' ' . $ride['last_name']) ?></li>
+                                                <li class="mb-2"><i class="fa-solid fa-phone text-muted me-2"></i> <strong>Téléphone :</strong> <a href="tel:<?= htmlspecialchars($ride['phone']) ?>"><?= htmlspecialchars($ride['phone']) ?></a></li>
+                                                <li class="mb-2"><i class="fa-solid fa-envelope text-muted me-2"></i> <strong>Email :</strong> <a href="mailto:<?= htmlspecialchars($ride['email']) ?>"><?= htmlspecialchars($ride['email']) ?></a></li>
+                                            </ul>
+                                            
+                                            <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Informations sur le trajet</h6>
+                                            <ul class="list-unstyled">
+                                                <li class="mb-2"><i class="fa-solid fa-chair text-muted me-2"></i> <strong>Total des places :</strong> <?= $ride['total_seats'] ?> place(s)</li>
+                                                <li class="mb-2"><i class="fa-solid fa-user-check text-muted me-2"></i> <strong>Places restantes :</strong> <?= $ride['available_seats'] ?> place(s)</li>
+                                            </ul>
+                                        </div>
+                                        <div class="modal-footer bg-light">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                            <a href="mailto:<?= htmlspecialchars($ride['email']) ?>?subject=Covoiturage%20<?= htmlspecialchars($ride['departure_agency_name']) ?>%20vers%20<?= htmlspecialchars($ride['arrival_agency_name']) ?>" class="btn btn-primary">
+                                                <i class="fa-solid fa-paper-plane me-1"></i> Contacter
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         <?php else: ?>
                             <a href="/login" class="btn btn-secondary w-100">Connectez-vous pour voir</a>
                         <?php endif; ?>
