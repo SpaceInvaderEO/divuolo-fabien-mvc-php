@@ -8,14 +8,16 @@ use App\Models\Ride;
 
 /**
  * Class RideController
- * Contrôleur pour la gestion des trajets
+ * Contrôleur pour la gestion des trajets (Création, Edition, Suppression)
  */
 class RideController extends Controller
 {
     /**
-     * Affiche le formulaire de création d'un trajet
+     * Affiche le formulaire de création d'un nouveau trajet
+     * 
+     * @return void
      */
-    public function create()
+    public function create(): void
     {
         $agencyModel = new Agency();
         $agencies = $agencyModel->getAll();
@@ -27,9 +29,12 @@ class RideController extends Controller
     }
 
     /**
-     * Traite la soumission du formulaire de création
+     * Traite la soumission du formulaire de création d'un trajet
+     * Valide les données (agences, dates, places) et enregistre en BDD
+     * 
+     * @return void
      */
-    public function store()
+    public function store(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id_departure_agency = filter_input(INPUT_POST, 'id_departure_agency', FILTER_VALIDATE_INT);
@@ -107,11 +112,13 @@ class RideController extends Controller
     }
 
     /**
-     * Affiche le formulaire de modification d'un trajet
+     * Affiche le formulaire de modification d'un trajet existant
+     * Vérifie que l'utilisateur est bien l'auteur du trajet
      * 
-     * @param int $id
+     * @param int $id ID du trajet à modifier
+     * @return void
      */
-    public function edit(int $id)
+    public function edit(int $id): void
     {
         $rideModel = new Ride();
         $ride = $rideModel->findById($id);
@@ -134,17 +141,19 @@ class RideController extends Controller
     }
 
     /**
-     * Traite la soumission de la modification
+     * Traite la mise à jour d'un trajet
+     * Gère la cohérence du nombre de places si des réservations existent
      * 
-     * @param int $id
+     * @param int $id ID du trajet à mettre à jour
+     * @return void
      */
-    public function update(int $id)
+    public function update(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rideModel = new Ride();
             $ride = $rideModel->findById($id);
 
-            // Vérification de sécurité
+            // Vérification de sécurité (propriété)
             if (!$ride || $ride['id_user'] != $_SESSION['user']['id_user']) {
                 $_SESSION['flash_message'] = "Vous n'êtes pas autorisé à modifier ce trajet.";
                 $_SESSION['flash_type'] = "danger";
@@ -172,7 +181,7 @@ class RideController extends Controller
                 exit;
             }
 
-            // Calculer la différence de places
+            // Calculer la différence de places pour ajuster les places disponibles
             $seatsDiff = $total_seats - $ride['total_seats'];
             $newAvailableSeats = $ride['available_seats'] + $seatsDiff;
 
@@ -206,11 +215,12 @@ class RideController extends Controller
     }
 
     /**
-     * Supprime un trajet
+     * Supprime un trajet (annule la proposition)
      * 
-     * @param int $id
+     * @param int $id ID du trajet à supprimer
+     * @return void
      */
-    public function delete(int $id)
+    public function delete(int $id): void
     {
         $rideModel = new Ride();
         $ride = $rideModel->findById($id);

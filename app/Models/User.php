@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Core\Model;
-use PDO;
 
 /**
  * Class User
@@ -14,10 +13,10 @@ class User extends Model
     /**
      * Recherche un utilisateur par son adresse email
      *
-     * @param string $email
-     * @return array<string, mixed>|false
+     * @param string $email Adresse email de l'utilisateur
+     * @return array<string, mixed>|false Les données de l'utilisateur ou false
      */
-    public function findByEmail(string $email)
+    public function findByEmail(string $email): array|false
     {
         $stmt = $this->pdo->prepare("SELECT * FROM `user` WHERE `email` = :email LIMIT 1");
         $stmt->execute(['email' => $email]);
@@ -27,10 +26,10 @@ class User extends Model
     /**
      * Recherche un utilisateur par son ID
      *
-     * @param int $id
-     * @return array<string, mixed>|false
+     * @param int $id ID unique de l'utilisateur
+     * @return array<string, mixed>|false Les données de l'utilisateur ou false
      */
-    public function findById(int $id)
+    public function findById(int $id): array|false
     {
         $stmt = $this->pdo->prepare("SELECT * FROM `user` WHERE `id_user` = :id LIMIT 1");
         $stmt->execute(['id' => $id]);
@@ -38,9 +37,9 @@ class User extends Model
     }
 
     /**
-     * Récupère tous les utilisateurs
+     * Récupère tous les utilisateurs triés par nom et prénom
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array<string, mixed>> Liste exhaustive des utilisateurs
      */
     public function getAll(): array
     {

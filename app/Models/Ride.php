@@ -11,9 +11,9 @@ use App\Core\Model;
 class Ride extends Model
 {
     /**
-     * Récupère tous les trajets avec places disponibles et non passés
+     * Récupère tous les trajets futurs possédant encore des places disponibles
      *
-     * @return array<int, array<string, mixed>> Liste des trajets
+     * @return array<int, array<string, mixed>> Liste des trajets disponibles
      */
     public function getAvailableRides(): array
     {
@@ -46,8 +46,8 @@ class Ride extends Model
     /**
      * Insère un nouveau trajet en base de données
      *
-     * @param array<string, mixed> $data Données du trajet
-     * @return bool
+     * @param array<string, mixed> $data Données du trajet (dates, places, agences, user)
+     * @return bool True en cas de succès, false sinon
      */
     public function insert(array $data): bool
     {
@@ -69,12 +69,12 @@ class Ride extends Model
     }
 
     /**
-     * Récupère un trajet spécifique par son ID
+     * Récupère un trajet spécifique par son identifiant unique
      *
      * @param int $id ID du trajet
-     * @return array<string, mixed>|false Le trajet ou false si non trouvé
+     * @return array<string, mixed>|false Les données du trajet ou false
      */
-    public function findById(int $id)
+    public function findById(int $id): array|false
     {
         $stmt = $this->pdo->prepare("SELECT * FROM `ride` WHERE `id_ride` = :id LIMIT 1");
         $stmt->execute(['id' => $id]);
@@ -82,11 +82,11 @@ class Ride extends Model
     }
 
     /**
-     * Met à jour un trajet existant
+     * Met à jour les informations d'un trajet existant
      *
-     * @param int $id ID du trajet
-     * @param array<string, mixed> $data Nouvelles données
-     * @return bool
+     * @param int $id ID du trajet à modifier
+     * @param array<string, mixed> $data Nouvelles données du trajet
+     * @return bool True en cas de succès, false sinon
      */
     public function update(int $id, array $data): bool
     {
@@ -112,10 +112,10 @@ class Ride extends Model
     }
 
     /**
-     * Supprime un trajet
+     * Supprime un trajet de la base de données
      *
-     * @param int $id ID du trajet
-     * @return bool
+     * @param int $id ID du trajet à supprimer
+     * @return bool True en cas de succès, false sinon
      */
     public function delete(int $id): bool
     {
@@ -124,9 +124,9 @@ class Ride extends Model
     }
 
     /**
-     * Récupère tous les trajets (pour l'administration)
+     * Récupère l'intégralité des trajets (pour l'administration) avec jointures
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array<string, mixed>> Liste de tous les trajets
      */
     public function getAllRides(): array
     {

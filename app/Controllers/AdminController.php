@@ -9,14 +9,22 @@ use App\Models\Ride;
 
 /**
  * Class AdminController
- * Gère les fonctionnalités d'administration
+ * Gère les fonctionnalités d'administration (Dashboard, Utilisateurs, Agences, Modération)
  */
 class AdminController extends Controller
 {
-    private $userModel;
-    private $agencyModel;
-    private $rideModel;
+    /** @var User */
+    private User $userModel;
+    
+    /** @var Agency */
+    private Agency $agencyModel;
+    
+    /** @var Ride */
+    private Ride $rideModel;
 
+    /**
+     * Initialise les modèles nécessaires
+     */
     public function __construct()
     {
         $this->userModel = new User();
@@ -25,9 +33,11 @@ class AdminController extends Controller
     }
 
     /**
-     * Dashboard administrateur
+     * Affiche le tableau de bord administrateur avec les statistiques
+     * 
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
         $usersCount = count($this->userModel->getAll());
         $agenciesCount = count($this->agencyModel->getAll());
@@ -41,35 +51,43 @@ class AdminController extends Controller
     }
 
     /**
-     * Liste des utilisateurs
+     * Affiche la liste complète des utilisateurs
+     * 
+     * @return void
      */
-    public function users()
+    public function users(): void
     {
         $users = $this->userModel->getAll();
         $this->render('admin/users', ['users' => $users]);
     }
 
     /**
-     * Liste des agences
+     * Affiche la liste des agences
+     * 
+     * @return void
      */
-    public function agencies()
+    public function agencies(): void
     {
         $agencies = $this->agencyModel->getAll();
         $this->render('admin/agencies/index', ['agencies' => $agencies]);
     }
 
     /**
-     * Formulaire de création d'agence
+     * Affiche le formulaire de création d'une nouvelle agence
+     * 
+     * @return void
      */
-    public function createAgency()
+    public function createAgency(): void
     {
         $this->render('admin/agencies/form', ['title' => 'Ajouter une agence']);
     }
 
     /**
-     * Traitement de la création d'agence
+     * Traite la soumission du formulaire de création d'agence
+     * 
+     * @return void
      */
-    public function storeAgency()
+    public function storeAgency(): void
     {
         $name = trim($_POST['name'] ?? '');
 
@@ -94,9 +112,12 @@ class AdminController extends Controller
     }
 
     /**
-     * Formulaire d'édition d'agence
+     * Affiche le formulaire d'édition d'une agence existante
+     * 
+     * @param int $id ID de l'agence à modifier
+     * @return void
      */
-    public function editAgency($id)
+    public function editAgency(int $id): void
     {
         $agency = $this->agencyModel->getById($id);
         if (!$agency) {
@@ -111,9 +132,12 @@ class AdminController extends Controller
     }
 
     /**
-     * Traitement de la mise à jour d'agence
+     * Traite la mise à jour des données d'une agence
+     * 
+     * @param int $id ID de l'agence
+     * @return void
      */
-    public function updateAgency($id)
+    public function updateAgency(int $id): void
     {
         $name = trim($_POST['name'] ?? '');
 
@@ -138,9 +162,12 @@ class AdminController extends Controller
     }
 
     /**
-     * Suppression d'une agence
+     * Supprime une agence de la base de données
+     * 
+     * @param int $id ID de l'agence
+     * @return void
      */
-    public function deleteAgency($id)
+    public function deleteAgency(int $id): void
     {
         if ($this->agencyModel->delete($id)) {
             $_SESSION['flash_message'] = "L'agence a été supprimée.";
@@ -154,18 +181,23 @@ class AdminController extends Controller
     }
 
     /**
-     * Liste de tous les trajets pour modération
+     * Affiche la liste de tous les trajets pour modération
+     * 
+     * @return void
      */
-    public function rides()
+    public function rides(): void
     {
         $rides = $this->rideModel->getAllRides();
         $this->render('admin/rides', ['rides' => $rides]);
     }
 
     /**
-     * Suppression d'un trajet par l'admin
+     * Supprime un trajet par un administrateur
+     * 
+     * @param int $id ID du trajet
+     * @return void
      */
-    public function deleteRide($id)
+    public function deleteRide(int $id): void
     {
         if ($this->rideModel->delete($id)) {
             $_SESSION['flash_message'] = "Le trajet a été supprimé par l'administrateur.";

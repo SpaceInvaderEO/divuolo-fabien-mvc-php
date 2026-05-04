@@ -7,14 +7,16 @@ use App\Models\Ride;
 
 /**
  * Class HomeController
- * Contrôleur de la page d'accueil
+ * Gère l'affichage de la page d'accueil publique
  */
 class HomeController extends Controller
 {
     /**
-     * Affiche la liste des trajets disponibles
+     * Affiche la liste des trajets disponibles (non complets et non passés)
+     * 
+     * @return void
      */
-    public function index()
+    public function index(): void
     {
         $rideModel = new Ride();
         $rides = $rideModel->getAvailableRides();

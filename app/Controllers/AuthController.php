@@ -7,14 +7,16 @@ use App\Models\User;
 
 /**
  * Class AuthController
- * Gère l'authentification des utilisateurs
+ * Gère l'authentification des utilisateurs (Connexion, Déconnexion, Vérification)
  */
 class AuthController extends Controller
 {
     /**
-     * Affiche le formulaire de connexion
+     * Affiche le formulaire de connexion si l'utilisateur n'est pas déjà authentifié
+     * 
+     * @return void
      */
-    public function login()
+    public function login(): void
     {
         // Si déjà connecté, rediriger vers l'accueil
         if (isset($_SESSION['user'])) {
@@ -22,13 +24,15 @@ class AuthController extends Controller
             exit;
         }
 
-        $this->render('auth/login', ['title' => 'Connexion - Covoiturage']);
+        $this->render('auth/login', ['title' => 'Connexion - Covoiturage Pro']);
     }
 
     /**
-     * Traite la soumission du formulaire de connexion
+     * Traite la soumission du formulaire de connexion et initialise la session utilisateur
+     * 
+     * @return void
      */
-    public function authenticate()
+    public function authenticate(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -46,7 +50,7 @@ class AuthController extends Controller
 
             if ($user && password_verify($password, $user['password'])) {
                 // Mot de passe correct, on stocke en session
-                unset($user['password']); // On ne stocke pas le mot de passe en session
+                unset($user['password']); // On ne stocke pas le mot de passe hashé en session par sécurité
                 $_SESSION['user'] = $user;
                 
                 $_SESSION['flash_message'] = "Bienvenue {$user['first_name']} !";
@@ -64,14 +68,16 @@ class AuthController extends Controller
     }
 
     /**
-     * Déconnecte l'utilisateur
+     * Déconnecte l'utilisateur en détruisant sa session
+     * 
+     * @return void
      */
-    public function logout()
+    public function logout(): void
     {
         unset($_SESSION['user']);
         session_destroy();
         
-        session_start(); // On redémarre une session pour le message flash
+        session_start(); // On redémarre une session pour porter le message flash de déconnexion
         $_SESSION['flash_message'] = "Vous avez été déconnecté.";
         $_SESSION['flash_type'] = "info";
         

@@ -11,7 +11,7 @@ use App\Core\Model;
 class Agency extends Model
 {
     /**
-     * Récupère toutes les agences, triées par nom
+     * Récupère toutes les agences, triées par nom par ordre alphabétique
      *
      * @return array<int, array<string, mixed>> Liste des agences
      */
@@ -22,12 +22,12 @@ class Agency extends Model
     }
 
     /**
-     * Récupère une agence par son ID
+     * Récupère une agence spécifique par son identifiant
      *
-     * @param int $id
-     * @return array<string, mixed>|false
+     * @param int $id ID de l'agence
+     * @return array<string, mixed>|false Les données de l'agence ou false
      */
-    public function getById(int $id)
+    public function getById(int $id): array|false
     {
         $stmt = $this->pdo->prepare("SELECT * FROM `agency` WHERE `id_agency` = :id");
         $stmt->execute(['id' => $id]);
@@ -35,10 +35,10 @@ class Agency extends Model
     }
 
     /**
-     * Crée une nouvelle agence
+     * Crée une nouvelle agence dans la base de données
      *
-     * @param string $name
-     * @return bool
+     * @param string $name Nom de la nouvelle agence
+     * @return bool True en cas de succès, false sinon
      */
     public function create(string $name): bool
     {
@@ -47,11 +47,11 @@ class Agency extends Model
     }
 
     /**
-     * Met à jour une agence
+     * Met à jour le nom d'une agence existante
      *
-     * @param int $id
-     * @param string $name
-     * @return bool
+     * @param int $id ID de l'agence à modifier
+     * @param string $name Nouveau nom de l'agence
+     * @return bool True en cas de succès, false sinon
      */
     public function update(int $id, string $name): bool
     {
@@ -60,10 +60,10 @@ class Agency extends Model
     }
 
     /**
-     * Supprime une agence
+     * Supprime une agence par son identifiant
      *
-     * @param int $id
-     * @return bool
+     * @param int $id ID de l'agence à supprimer
+     * @return bool True en cas de succès, false sinon
      */
     public function delete(int $id): bool
     {

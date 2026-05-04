@@ -13,6 +13,9 @@ abstract class Model
 {
     protected ?PDO $pdo = null;
 
+    /**
+     * Initialise la connexion à la base de données via PDO
+     */
     public function __construct()
     {
         // Connexion à la base de données via variables d'environnement
