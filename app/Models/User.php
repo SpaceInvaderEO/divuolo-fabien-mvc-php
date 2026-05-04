@@ -36,4 +36,15 @@ class User extends Model
         $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
+
+    /**
+     * Récupère tous les utilisateurs
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAll(): array
+    {
+        $stmt = $this->pdo->query("SELECT * FROM `user` ORDER BY `last_name` ASC, `first_name` ASC");
+        return $stmt->fetchAll();
+    }
 }
